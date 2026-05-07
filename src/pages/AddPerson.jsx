@@ -11,9 +11,9 @@ export default function AddPerson() {
   const set = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }))
 
   const handleSubmit = async () => {
-    if (!form.full_name.trim() || form.full_name.trim().length < 2) {
-      setError('Введите полное имя (минимум 2 символа)')
-      return
+   if (!form.full_name.trim() && !form.phone.trim() && !form.tg_username.trim()) {
+  setError('Заполните хотя бы одно поле')
+  return
     }
 
     setLoading(true)
@@ -93,7 +93,7 @@ export default function AddPerson() {
         <button
           className="btn btn-primary"
           onClick={handleSubmit}
-          disabled={loading || !form.full_name.trim()}
+          disabled={loading || (!form.full_name.trim() && !form.phone.trim() && !form.tg_username.trim())}
         >
           {loading ? 'Сохранение...' : '✅ Добавить в базу'}
         </button>
