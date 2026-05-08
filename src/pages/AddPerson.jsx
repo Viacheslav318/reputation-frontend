@@ -10,10 +10,12 @@ export default function AddPerson() {
 
   const set = (field) => (e) => setForm(f => ({ ...f, [field]: e.target.value }))
 
+  const hasAnyField = form.full_name.trim() || form.phone.trim() || form.tg_username.trim()
+
   const handleSubmit = async () => {
-   if (!form.full_name.trim() && !form.phone.trim() && !form.tg_username.trim()) {
-  setError('Заполните хотя бы одно поле')
-  return
+    if (!hasAnyField) {
+      setError('Заполните хотя бы одно поле')
+      return
     }
 
     setLoading(true)
@@ -21,7 +23,7 @@ export default function AddPerson() {
 
     try {
       const data = await api.createProfile({
-        full_name: form.full_name.trim(),
+        full_name: form.full_name.trim() || undefined,
         phone: form.phone.trim() || undefined,
         tg_username: form.tg_username.trim() || undefined
       })
@@ -49,11 +51,11 @@ export default function AddPerson() {
       <div className="page-content">
         <div className="card" style={{ gap: 16, display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontSize: 13, color: 'var(--text2)', lineHeight: 1.6 }}>
-            Заполните данные о человеке. Хотя бы одно поле для идентификации обязательно.
+            Заполните хотя бы одно поле для идентификации человека.
           </div>
 
           <div className="input-wrap">
-            <label className="input-label">ФИО *</label>
+            <label className="input-label">ФИО</label>
             <input
               className="input"
               placeholder="Иванов Иван Иванович"
@@ -93,7 +95,7 @@ export default function AddPerson() {
         <button
           className="btn btn-primary"
           onClick={handleSubmit}
-          disabled={loading || (!form.full_name.trim() && !form.phone.trim() && !form.tg_username.trim())}
+          disabled={loading || !hasAnyField}
         >
           {loading ? 'Сохранение...' : '✅ Добавить в базу'}
         </button>
