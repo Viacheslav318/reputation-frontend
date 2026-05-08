@@ -4,7 +4,6 @@ import { api } from '../lib/api'
 
 function ReviewCard({ review }) {
   const isPos = review.type === 'positive'
-  const author = review.users
 
   return (
     <div className="card fade-up" style={{ borderLeft: `3px solid ${isPos ? 'var(--green)' : 'var(--red)'}` }}>
@@ -19,9 +18,8 @@ function ReviewCard({ review }) {
             {isPos ? '👍' : '👎'}
           </div>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600 }}>
-              {author?.first_name || 'Аноним'}
-              {author?.username && <span style={{ color: 'var(--text2)', fontWeight: 400 }}> @{author.username}</span>}
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text2)' }}>
+              Анонимный отзыв
             </div>
             <div style={{ fontSize: 11, color: 'var(--text3)' }}>
               {new Date(review.created_at).toLocaleDateString('ru-RU')}
@@ -59,7 +57,7 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState(null)
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all') // all | positive | negative
+  const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     api.getProfile(id)
@@ -102,9 +100,11 @@ export default function ProfilePage() {
         <div className="card" style={{ background: 'var(--bg2)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
             <div>
-              <div style={{ fontFamily: 'var(--font-head)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.5px', marginBottom: 8 }}>
-                {profile.full_name}
-              </div>
+              {profile.full_name && (
+                <div style={{ fontFamily: 'var(--font-head)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.5px', marginBottom: 8 }}>
+                  {profile.full_name}
+                </div>
+              )}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {profile.phone && (
                   <span style={{ fontSize: 14, color: 'var(--text2)' }}>📞 {profile.phone}</span>
